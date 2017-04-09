@@ -3,6 +3,7 @@ package mgomap
 import (
 	"time"
 	"gopkg.in/mgo.v2"
+	"reflect"
 )
 
 type Mapper struct {
@@ -37,8 +38,17 @@ func (self *Mapper) Connect() error {
 	return nil
 }
 
-func NewTransaction(mapper Mapper) *Transaction {
+func newTransaction(mapper *Mapper) *Transaction {
 	return &Transaction{
 		Mapper: mapper,
 	}
+}
+
+func getName(model interface{}) string {
+	t := reflect.TypeOf(model)
+	for t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+	
+	return t.Name()
 }
